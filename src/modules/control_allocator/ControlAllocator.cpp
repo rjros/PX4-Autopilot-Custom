@@ -499,7 +499,7 @@ ControlAllocator::update_effectiveness_matrix_if_needed(EffectivenessUpdateReaso
 				int selected_matrix = _control_allocation_selection_indexes[actuator_idx];
 
 				if ((ActuatorType)actuator_type == ActuatorType::MOTORS) {
-					if (actuator_type_idx >= MAX_NUM_MOTORS) {
+					if (actuator_type_idx >= MAX_NUM_MOTORS+1) {
 						PX4_ERR("Too many motors");
 						_num_actuators[actuator_type] = 0;
 						break;

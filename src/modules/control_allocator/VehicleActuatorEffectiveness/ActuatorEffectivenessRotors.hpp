@@ -60,7 +60,8 @@ public:
 		FixedUpwards, ///< axis is fixed, pointing upwards (negative Z)
 	};
 
-	static constexpr int NUM_ROTORS_MAX = 12;
+	//NOTE: Increased number to 16, does this depend on the remaining actuators
+	static constexpr int NUM_ROTORS_MAX = 16;
 
 	struct RotorGeometry {
 		matrix::Vector3f position;

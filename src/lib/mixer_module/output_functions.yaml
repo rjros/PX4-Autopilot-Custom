@@ -6,10 +6,10 @@ functions:
 
     Constant_Min: 1
     Constant_Max: 2
-
+  #NOTE:(ricardo) Check increased number of rotors
     Motor:
       start: 101
-      count: 12
+      count: 16
     Servo:
       start: 201
       count: 8
