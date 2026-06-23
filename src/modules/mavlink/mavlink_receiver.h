@@ -62,6 +62,10 @@
 #include <uORB/SubscriptionInterval.hpp>
 #include <uORB/topics/actuator_armed.h>
 #include <uORB/topics/actuator_outputs.h>
+
+//NOTE:(Ricardo) Should diretly send the motors values [-1,1]
+#include <uORB/topics/actuator_motors.h>
+
 #include <uORB/topics/airspeed.h>
 #include <uORB/topics/autotune_attitude_control_status.h>
 #include <uORB/topics/battery_status.h>
@@ -194,6 +198,8 @@ private:
 	void handle_message_rc_channels_override(mavlink_message_t *msg);
 	void handle_message_serial_control(mavlink_message_t *msg);
 	void handle_message_set_attitude_target(mavlink_message_t *msg);
+	//NOTE: Custom Mod
+	void handle_message_set_actuator_control_target(mavlink_message_t *msg);
 	void handle_message_set_mode(mavlink_message_t *msg);
 	void handle_message_set_position_target_global_int(mavlink_message_t *msg);
 	void handle_message_set_position_target_local_ned(mavlink_message_t *msg);
@@ -326,6 +332,11 @@ private:
 	uORB::Publication<vehicle_odometry_s>			_mocap_odometry_pub{ORB_ID(vehicle_mocap_odometry)};
 	uORB::Publication<vehicle_odometry_s>			_visual_odometry_pub{ORB_ID(vehicle_visual_odometry)};
 	uORB::Publication<vehicle_rates_setpoint_s>		_rates_sp_pub{ORB_ID(vehicle_rates_setpoint)};
+	//NOTE:CUSTOM MOD
+	uORB::Publication<actuator_motors_s>			_actuator_motors_pub{ORB_ID(actuator_motors)};
+
+//NOTE: Add the motor ouput here for the mavros command, current limit is based on the msg
+//
 
 #if !defined(CONSTRAINED_FLASH)
 	uORB::Publication<debug_array_s>			_debug_array_pub {ORB_ID(debug_array)};

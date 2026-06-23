@@ -175,6 +175,11 @@ MavlinkReceiver::handle_message(mavlink_message_t *msg)
 	case MAVLINK_MSG_ID_SET_ATTITUDE_TARGET:
 		handle_message_set_attitude_target(msg);
 		break;
+	
+	//NOTE: For direct control of the actuators mavros
+	case MAVLINK_MSG_ID_SET_ACTUATOR_CONTROL_TARGET:
+		handle_message_set_actuator_control_target(msg);
+		break;
 
 	case MAVLINK_MSG_ID_VISION_POSITION_ESTIMATE:
 		handle_message_vision_position_estimate(msg);
@@ -1690,6 +1695,32 @@ MavlinkReceiver::handle_message_set_attitude_target(mavlink_message_t *msg)
 			}
 		}
 	}
+}
+
+//NOTE: Actuator control for msgs from mavros
+//
+void MavlinkReceiver::handle_message_set_actuator_control_target(mavlink_message_t *msg)
+{
+    mavlink_set_actuator_control_target_t target;
+    mavlink_msg_set_actuator_control_target_decode(msg, &target);
+
+    if (target.group_mlx == 6) {
+        // Set offboard mode flag
+        offboard_control_mode_s ocm{};
+        ocm.timestamp       = hrt_absolute_time();
+        ocm.direct_actuator = true;   // ← tells allocator to bypass
+        _offboard_control_mode_pub.publish(ocm);
+
+        // Publish motor values to a separate topic
+        actuator_motors_s motors{};
+        motors.timestamp = hrt_absolute_time();
+        for (int i = 0; i < actuator_motors_s::NUM_CONTROLS; i++) {
+            motors.control[i] = (i < 8)
+                ? math::constrain(target.controls[i], 0.0f, 1.0f)
+                : NAN;
+        }
+        _actuator_motors_pub.publish(motors);  // separate topic
+    }
 }
 
 void

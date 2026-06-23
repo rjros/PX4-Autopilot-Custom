@@ -1,0 +1,17 @@
+# ~/PX4-Autopilot-Custom/.clangd
+CompileFlags:
+  Remove:
+    - -mcpu=*
+    - -mfpu=*
+    - -mfloat-abi=*
+    - -fno-builtin-*
+    - --specs=*
+    - -mthumb
+    - -march=*
+  Add:
+    - -Wno-unknown-warning-option
+
+Diagnostics:
+  Suppress:
+    - pp_including_mainfile_in_preamble
+    - drv_unknown_argument
